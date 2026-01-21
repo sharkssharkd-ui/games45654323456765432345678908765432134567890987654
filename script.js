@@ -1,8 +1,11 @@
 // --- НАВИГАЦИЯ ---
 const nav = {
     to: (screenId) => {
+        // Убираем класс active у всех экранов
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(`screen-${screenId}`).classList.add('active');
+        // Добавляем класс active нужному экрану
+        const screen = document.getElementById(`screen-${screenId}`);
+        if(screen) screen.classList.add('active');
     }
 };
 
@@ -13,10 +16,10 @@ const themes = {
     }
 };
 
-// --- ЗМЕЙКА (SNAKE) ---
+// --- ЗМЕЙКА ---
 const snakeGame = {
     canvas: document.getElementById('snake-canvas'),
-    ctx: document.getElementById('snake-canvas').getContext('2d'),
+    ctx: null,
     interval: null,
     snake: [],
     food: {},
@@ -25,12 +28,17 @@ const snakeGame = {
     
     start: () => {
         nav.to('snake-game');
+        snakeGame.ctx = snakeGame.canvas.getContext('2d');
+        // Центрируем змейку
         snakeGame.snake = [{x:10, y:10}, {x:10, y:11}, {x:10, y:12}];
         snakeGame.placeFood();
         snakeGame.dir = {x:0, y:-1};
-        let speed = 11 - document.getElementById('snake-speed').value;
+        let speedVal = document.getElementById('snake-speed').value;
+        let speed = 150 - (speedVal * 10); // Чем больше число в input, тем меньше мс
+        
         if(snakeGame.interval) clearInterval(snakeGame.interval);
-        snakeGame.interval = setInterval(snakeGame.update, speed * 20);
+        snakeGame.interval = setInterval(snakeGame.update, speed);
+        
         document.addEventListener('keydown', snakeGame.keyHandler);
     },
 
@@ -44,6 +52,10 @@ const snakeGame = {
             x: Math.floor(Math.random() * 20),
             y: Math.floor(Math.random() * 20)
         };
+        // Чтобы еда не спавнилась в змейке
+        snakeGame.snake.forEach(s => {
+            if(s.x === snakeGame.food.x && s.y === snakeGame.food.y) snakeGame.placeFood();
+        });
     },
 
     keyHandler: (e) => {
@@ -57,10 +69,20 @@ const snakeGame = {
     update: () => {
         const head = {x: snakeGame.snake[0].x + snakeGame.dir.x, y: snakeGame.snake[0].y + snakeGame.dir.y};
         
-        // Стенки
-        if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) return snakeGame.stop();
-        // Хвост
-        if(snakeGame.snake.some(s => s.x === head.x && s.y === head.y)) return snakeGame.stop();
+        // Столкновение со стенами
+        if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+            alert('Гейм Овер!');
+            snakeGame.stop();
+            nav.to('snake-menu');
+            return;
+        }
+        // Столкновение с хвостом
+        if(snakeGame.snake.some(s => s.x === head.x && s.y === head.y)) {
+            alert('Гейм Овер!');
+            snakeGame.stop();
+            nav.to('snake-menu');
+            return;
+        }
 
         snakeGame.snake.unshift(head);
 
@@ -76,9 +98,9 @@ const snakeGame = {
     draw: () => {
         const ctx = snakeGame.ctx;
         const cs = snakeGame.cellSize;
-        // Очистка
-        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-color');
-        ctx.fillRect(0,0,400,400);
+        
+        // Фон канваса
+        ctx.clearRect(0,0,400,400);
 
         // Еда
         ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--apple');
@@ -92,7 +114,7 @@ const snakeGame = {
     }
 };
 
-// --- КРЕСТИКИ-НОЛИКИ (TTT) ---
+// --- КРЕСТИКИ-НОЛИКИ ---
 const tttGame = {
     board: [],
     turn: 'X',
@@ -117,8 +139,10 @@ const tttGame = {
             btn.className = 'ttt-cell';
             btn.innerText = cell;
             btn.onclick = () => tttGame.click(i);
+            
             if(cell === 'X') btn.style.color = '#38bdf8';
             if(cell === 'O') btn.style.color = '#a78bfa';
+            
             div.appendChild(btn);
         });
     },
@@ -135,6 +159,13 @@ const tttGame = {
             return;
         }
         
+        // Ничья
+        if(!tttGame.board.includes('')) {
+            document.getElementById('ttt-status').innerText = "НИЧЬЯ!";
+            tttGame.active = false;
+            return;
+        }
+        
         tttGame.turn = tttGame.turn === 'X' ? 'O' : 'X';
         document.getElementById('ttt-status').innerText = `Ход: ${tttGame.turn}`;
 
@@ -144,6 +175,7 @@ const tttGame = {
     },
 
     botMove: () => {
+        // Простой бот: ищет свободную клетку
         const empties = tttGame.board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
         if(empties.length > 0) {
             const move = empties[Math.floor(Math.random() * empties.length)];

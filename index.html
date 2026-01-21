@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA GAMES WEB</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ГЛАВНОЕ МЕНЮ -->
+        <div id="menu-screen" class="screen active">
+            <h1 class="title">MEGA GAMES</h1>
+            <div class="menu-grid">
+                <button onclick="startGame('snake')">🐍 ЗМЕЙКА</button>
+                <button onclick="startGame('ttt')">❌ КРЕСТИКИ</button>
+                <button onclick="startGame('match3')">💎 3 В РЯД</button>
+                <button onclick="startGame('clicker')">💣 САПЕР (Скоро)</button>
+            </div>
+            <div class="stats-box">
+                <p>Ваши рекорды сохраняются автоматически!</p>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ИГРЫ: ЗМЕЙКА -->
+        <div id="snake-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
+                <span id="snake-score">Счет: 0</span>
+            </div>
+            <canvas id="snake-canvas" width="400" height="400"></canvas>
+            <div class="controls-hint">Управление: WASD или Стрелки</div>
+            <div class="mobile-controls">
+                <button onclick="snakeDir(0, -1)">⬆️</button>
+                <div class="row">
+                    <button onclick="snakeDir(-1, 0)">⬅️</button>
+                    <button onclick="snakeDir(1, 0)">➡️</button>
+                </div>
+                <button onclick="snakeDir(0, 1)">⬇️</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ИГРЫ: КРЕСТИКИ -->
+        <div id="ttt-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
+                <span id="ttt-status">Ход: X</span>
+            </div>
+            <div class="ttt-grid" id="ttt-board">
+                <!-- Клетки создаются JS -->
+            </div>
+            <button class="restart-btn" onclick="initTTT()">Заново</button>
+        </div>
+
+        <!-- ЭКРАН ИГРЫ: 3 В РЯД -->
+        <div id="match3-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
+                <span id="m3-score">Очки: 0</span>
+            </div>
+            <div id="m3-grid" class="match3-grid"></div>
+            <div class="controls-hint">Кликай, чтобы менять местами</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

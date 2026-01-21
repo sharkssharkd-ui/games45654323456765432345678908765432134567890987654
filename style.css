@@ -1,123 +1,284 @@
+/* --- ШРИФТЫ И БАЗА --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+
 :root {
+    /* DEFAULT BLUE (Cyberpunk) */
     --bg-color: #0B1026;
     --text-color: #FFFFFF;
-    --btn-color: #2563EB;
+    --btn-primary: #2563EB;
+    --btn-secondary: #60A5FA; /* Примерно подобрано под Python */
+    --board-bg: #1E3A8A;
+    
+    /* Цвета для конкретных кнопок (как в коде Python) */
+    --c-blue: #2563EB;
+    --c-purple: #9333EA;
+    --c-cyan: #06b6d4; /* Сапер */
+    --c-green: #10B981; /* Змейка */
+    --c-gray: #374151;
+    
+    /* Игровые цвета */
+    --snake-bg: #0f172a;
     --snake-body: #38bdf8;
     --apple: #ef4444;
 }
 
-/* Темы */
-body.theme-classic { --bg-color: #272727; --btn-color: #8B4513; --snake-body: #22c55e; }
-body.theme-emerald { --bg-color: #064E3B; --btn-color: #10B981; --snake-body: #34d399; }
-body.theme-purple  { --bg-color: #2E1065; --btn-color: #9333EA; --snake-body: #d8b4fe; }
-body.theme-red     { --bg-color: #450A0A; --btn-color: #DC2626; --snake-body: #fca5a5; }
-body.theme-gray    { --bg-color: #111827; --btn-color: #374151; --snake-body: #9ca3af; }
+/* ТЕМЫ ИЗ PYTHON КОДА */
+body.theme-classic {
+    --bg-color: #272727;
+    --text-color: #FFFFFF;
+    --btn-primary: #8B4513;
+    --btn-secondary: #B58863;
+    --c-blue: #8B4513; --c-purple: #B58863; --c-cyan: #5c4033; --c-green: #27ae60; --c-gray: #3e3e3e;
+    --snake-bg: #1c1917; --snake-body: #22c55e;
+}
+body.theme-emerald {
+    --bg-color: #064E3B;
+    --btn-primary: #10B981;
+    --c-blue: #10B981; --c-purple: #34d399; --c-cyan: #059669; --c-green: #10B981; --c-gray: #065f46;
+    --snake-bg: #022c22; --snake-body: #34d399;
+}
+body.theme-purple {
+    --bg-color: #2E1065;
+    --btn-primary: #9333EA;
+    --c-blue: #9333EA; --c-purple: #c084fc; --c-cyan: #7c3aed; --c-green: #d8b4fe; --c-gray: #581c87;
+    --snake-bg: #2e1065; --snake-body: #d8b4fe;
+}
+body.theme-red {
+    --bg-color: #450A0A;
+    --btn-primary: #DC2626;
+    --c-blue: #DC2626; --c-purple: #ef4444; --c-cyan: #991b1b; --c-green: #fca5a5; --c-gray: #7f1d1d;
+    --snake-bg: #450a0a; --snake-body: #fca5a5;
+}
+body.theme-gray {
+    --bg-color: #111827;
+    --btn-primary: #374151;
+    --c-blue: #374151; --c-purple: #4B5563; --c-cyan: #4b5563; --c-green: #9ca3af; --c-gray: #1f2937;
+    --snake-bg: #111827; --snake-body: #9ca3af;
+}
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'Segoe UI', sans-serif;
+    background-color: #000; /* Фон за пределами телефона */
     margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    overflow: hidden; /* Чтобы не было скролла */
-    user-select: none;
-    transition: background-color 0.5s;
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    overflow: hidden;
 }
 
-/* Фоновые иконки */
+/* --- КОНТЕЙНЕР ПРИЛОЖЕНИЯ (ТЕЛЕФОН) --- */
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    height: 100%;
+    max-height: 850px;
+    background-color: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    transition: background-color 0.3s;
+}
+
+/* --- ФОНОВЫЕ ИКОНКИ --- */
 .bg-icons div {
     position: absolute;
-    font-size: 15rem;
+    font-size: 10rem;
     opacity: 0.05;
-    z-index: -1;
-    transform: translate(-50%, -50%);
     pointer-events: none;
+    z-index: 0;
 }
+.icon-chess { top: 10%; right: -20px; }
+.icon-bomb { bottom: 10%; right: 10%; font-size: 8rem !important; }
+.icon-snake { top: 40%; left: -20px; font-size: 12rem !important; }
 
-/* Экраны */
+/* --- ЭКРАНЫ --- */
 .screen {
-    display: none; /* Скрываем все экраны по умолчанию */
+    display: none;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 500px;
+    height: 100%;
     padding: 20px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+.screen.active { display: flex; animation: fadeIn 0.3s; }
+
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+.main-title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    margin: 40px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-/* Показываем только активный экран */
-.screen.active {
+.screen-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* --- КНОПКИ --- */
+.menu-buttons {
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
 }
 
-.title { font-size: 3rem; margin-bottom: 2rem; }
-
-/* Кнопки */
 .btn {
-    background: var(--btn-color);
-    color: white;
     border: none;
-    padding: 15px;
-    margin: 5px;
+    padding: 18px;
     border-radius: 15px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
     cursor: pointer;
-    width: 100%;
-    transition: filter 0.2s;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.1s, filter 0.2s;
 }
-.btn:hover { filter: brightness(1.2); }
-.btn-back { background: #444; margin-top: 20px; }
-.btn-small { background: #444; color: white; border:none; padding: 5px 10px; border-radius: 5px; cursor: pointer;}
+.btn:active { transform: scale(0.96); }
 
-.menu-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+/* Цветовые модификаторы кнопок */
+.btn-primary { background: var(--btn-primary); }
+.btn-secondary { background: var(--c-purple); }
+.btn-cyan { background: var(--c-cyan); }
+.btn-blue { background: var(--c-blue); }
+.btn-green { background: var(--c-green); }
+.btn-dark { background: #555; }
+.btn-gray { background: var(--c-gray); }
+
+.bottom-bar {
+    display: flex;
     gap: 10px;
-    width: 100%;
+    margin-top: 10px;
 }
+.half { flex: 1; }
+.mt-auto { margin-top: auto; }
 
-.bottom-controls { width: 100%; margin-top: 10px; }
-
-/* Настройки змейки */
-.settings-box {
-    margin: 20px 0;
-    font-size: 1.2rem;
-}
-
-/* Канвас змейки */
-canvas {
-    background: rgba(0,0,0,0.2);
+/* --- ЗМЕЙКА --- */
+.settings-control {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    max-width: 100%;
+    margin-bottom: 20px;
 }
-.game-header {
+.canvas-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+canvas {
+    background: var(--snake-bg);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+.game-top-bar {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 10px;
-    font-size: 1.5rem;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
     font-weight: bold;
 }
+.btn-small {
+    background: var(--c-gray);
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.mobile-controls {
+    display: flex;
+    justify-content: center;
+}
+.d-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.d-pad button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
 
-/* Крестики-нолики */
-.ttt-grid {
+/* --- КРЕСТИКИ-НОЛИКИ --- */
+.ttt-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-top: 20px;
+    aspect-ratio: 1/1;
 }
 .ttt-cell {
-    width: 100px;
-    height: 100px;
     background: rgba(255,255,255,0.1);
     border: none;
-    font-size: 3rem;
+    border-radius: 10px;
+    font-size: 3.5rem;
+    font-weight: bold;
     color: white;
     cursor: pointer;
-    border-radius: 15px;
 }
+.cell-x { color: #38bdf8; }
+.cell-o { color: #a78bfa; }
+
+/* --- САПЕР --- */
+.sapper-grid {
+    display: grid;
+    gap: 2px;
+    margin: 0 auto;
+    background: rgba(0,0,0,0.2);
+    padding: 5px;
+    border-radius: 5px;
+}
+.sap-cell {
+    width: 30px;
+    height: 30px;
+    background: var(--c-cyan);
+    border: none;
+    border-radius: 3px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+}
+.sap-cell.revealed { background: rgba(0,0,0,0.3); }
+.sap-cell.mine { background: #ef4444; }
+.sap-cell.flag { background: #f59e0b; color: black; }
+
+/* --- ТЕМЫ --- */
+.theme-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.btn-theme {
+    padding: 20px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.t-blue { background: #2563EB; }
+.t-classic { background: #8B4513; }
+.t-emerald { background: #10B981; }
+.t-purple { background: #9333EA; }
+.t-red { background: #DC2626; }
+.t-gray { background: #374151; }

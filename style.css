@@ -1,55 +1,60 @@
 :root {
-    /* Default BLUE Theme */
     --bg-color: #0B1026;
     --text-color: #FFFFFF;
     --btn-color: #2563EB;
-    --board-light: #60A5FA;
-    --board-dark: #1E3A8A;
     --snake-body: #38bdf8;
     --apple: #ef4444;
 }
 
-body.theme-classic { --bg-color: #272727; --btn-color: #8B4513; --board-light: #F0D9B5; --board-dark: #B58863; --snake-body: #22c55e; }
-body.theme-emerald { --bg-color: #064E3B; --btn-color: #10B981; --board-light: #6EE7B7; --board-dark: #047857; --snake-body: #34d399; }
-body.theme-purple  { --bg-color: #2E1065; --btn-color: #9333EA; --board-light: #E9D5FF; --board-dark: #7E22CE; --snake-body: #d8b4fe; }
-body.theme-red     { --bg-color: #450A0A; --btn-color: #DC2626; --board-light: #FECACA; --board-dark: #B91C1C; --snake-body: #fca5a5; }
-body.theme-gray    { --bg-color: #111827; --btn-color: #374151; --board-light: #D1D5DB; --board-dark: #4B5563; --snake-body: #9ca3af; }
+/* Темы */
+body.theme-classic { --bg-color: #272727; --btn-color: #8B4513; --snake-body: #22c55e; }
+body.theme-emerald { --bg-color: #064E3B; --btn-color: #10B981; --snake-body: #34d399; }
+body.theme-purple  { --bg-color: #2E1065; --btn-color: #9333EA; --snake-body: #d8b4fe; }
+body.theme-red     { --bg-color: #450A0A; --btn-color: #DC2626; --snake-body: #fca5a5; }
+body.theme-gray    { --bg-color: #111827; --btn-color: #374151; --snake-body: #9ca3af; }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow: hidden; /* Чтобы не было скролла */
     user-select: none;
+    transition: background-color 0.5s;
 }
 
-/* Background Icons */
+/* Фоновые иконки */
 .bg-icons div {
     position: absolute;
     font-size: 15rem;
     opacity: 0.05;
     z-index: -1;
     transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
+/* Экраны */
 .screen {
-    display: none;
+    display: none; /* Скрываем все экраны по умолчанию */
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 500px;
-    text-align: center;
+    padding: 20px;
 }
 
-.screen.active { display: flex; }
+/* Показываем только активный экран */
+.screen.active {
+    display: flex;
+}
 
 .title { font-size: 3rem; margin-bottom: 2rem; }
 
+/* Кнопки */
 .btn {
     background: var(--btn-color);
     color: white;
@@ -63,9 +68,9 @@ body {
     width: 100%;
     transition: filter 0.2s;
 }
-
 .btn:hover { filter: brightness(1.2); }
 .btn-back { background: #444; margin-top: 20px; }
+.btn-small { background: #444; color: white; border:none; padding: 5px 10px; border-radius: 5px; cursor: pointer;}
 
 .menu-grid {
     display: grid;
@@ -74,27 +79,45 @@ body {
     width: 100%;
 }
 
-/* Snake Canvas */
+.bottom-controls { width: 100%; margin-top: 10px; }
+
+/* Настройки змейки */
+.settings-box {
+    margin: 20px 0;
+    font-size: 1.2rem;
+}
+
+/* Канвас змейки */
 canvas {
     background: rgba(0,0,0,0.2);
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    max-width: 100%;
+}
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-/* TTT Grid */
+/* Крестики-нолики */
 .ttt-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+    gap: 10px;
     margin-top: 20px;
 }
 .ttt-cell {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background: rgba(255,255,255,0.1);
     border: none;
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: white;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 15px;
 }

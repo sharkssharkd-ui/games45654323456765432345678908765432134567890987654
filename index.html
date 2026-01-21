@@ -3,231 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MEGA GAMES PRO</title>
+    <title>MEGA GAMES</title>
+    <!-- Подключаем шрифт (как на Vesperia/Minecraft серверах часто используют Rubik или Montserrat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-container">
+    <!-- Фон с частицами -->
+    <canvas id="particles"></canvas>
+    <div class="overlay"></div>
+
+    <div class="app">
         
         <!-- === ГЛАВНОЕ МЕНЮ === -->
-        <div id="screen-menu" class="screen active">
-            <div class="logo-area">
-                <h1 class="logo">MEGA<br>GAMES</h1>
-            </div>
-            <div class="menu-grid">
-                <button class="game-btn" onclick="Nav.toSetup('snake')">
-                    <div class="icon-box">🐍</div><span>ЗМЕЙКА</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('match3')">
-                    <div class="icon-box">💎</div><span>3 В РЯД</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('battleship')">
-                    <div class="icon-box">⚓</div><span>МОРСКОЙ БОЙ</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('sapper')">
-                    <div class="icon-box">💣</div><span>САПЕР</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('ttt')">
-                    <div class="icon-box">❌</div><span>КРЕСТИКИ</span>
-                </button>
-            </div>
-            <div class="bottom-nav">
-                <button onclick="Nav.show('screen-stats')">📊 СТАТИСТИКА</button>
-                <button onclick="Nav.show('screen-settings')">⚙ ТЕМА</button>
-            </div>
-        </div>
+        <section id="page-menu" class="page active">
+            <header>
+                <div class="logo-box">
+                    <h1 class="glitch" data-text="MEGA GAMES">MEGA GAMES</h1>
+                    <span class="badge">ULTIMATE</span>
+                </div>
+            </header>
 
-        <!-- === НАСТРОЙКИ: ЗМЕЙКА === -->
-        <div id="screen-setup-snake" class="screen">
-            <h2>ЗМЕЙКА: НАСТРОЙКИ</h2>
-            <div class="setup-scroll-area">
-                <div class="setup-block">
-                    <label>Скорость: <b id="val-snake-speed">5</b></label>
-                    <input type="range" min="1" max="10" value="5" oninput="Setup.updateLabel('snake-speed', this.value)">
+            <div class="grid-menu">
+                <div class="card game-card" onclick="Nav.toSetup('snake')">
+                    <div class="icon">🐍</div>
+                    <div class="meta">
+                        <h3>Змейка</h3>
+                        <p>Классика + Бонусы</p>
+                    </div>
+                </div>
+                <div class="card game-card" onclick="Nav.toSetup('match3')">
+                    <div class="icon">💎</div>
+                    <div class="meta">
+                        <h3>3 в Ряд</h3>
+                        <p>Цветные камни</p>
+                    </div>
+                </div>
+                <div class="card game-card" onclick="Nav.toSetup('battleship')">
+                    <div class="icon">⚓</div>
+                    <div class="meta">
+                        <h3>Морской Бой</h3>
+                        <p>Тактика</p>
+                    </div>
+                </div>
+                <div class="card game-card" onclick="Nav.toSetup('sapper')">
+                    <div class="icon">💣</div>
+                    <div class="meta">
+                        <h3>Сапер</h3>
+                        <p>Логика</p>
+                    </div>
+                </div>
+                <div class="card game-card" onclick="Nav.toSetup('ttt')">
+                    <div class="icon">❌</div>
+                    <div class="meta">
+                        <h3>Крестики</h3>
+                        <p>PvE режим</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="menu-footer">
+                <button class="glass-btn" onclick="Nav.openModal('stats')">📊 Статистика</button>
+                <button class="glass-btn" onclick="Nav.openModal('settings')">⚙ Настройки</button>
+            </footer>
+        </section>
+
+        <!-- === ЭКРАНЫ НАСТРОЙКИ (SETUP) === -->
+        
+        <!-- Setup: Змейка -->
+        <section id="setup-snake" class="page setup-page">
+            <div class="setup-card">
+                <h2>🐍 Настройка Змейки</h2>
+                <div class="setting-row">
+                    <label>Скорость</label>
+                    <input type="range" id="snake-speed" min="1" max="10" value="5">
+                </div>
+                <div class="setting-row">
+                    <label>Стены</label>
+                    <button class="toggle active" id="snake-walls" onclick="this.classList.toggle('active')">ВКЛ</button>
                 </div>
                 
-                <h3>ФРУКТЫ И БОНУСЫ</h3>
-                <div class="toggles-grid">
-                    <!-- Стандартные -->
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'gold')">
-                        <span>🍌</span> <small>+5 Очков</small>
-                    </div>
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'blue')">
-                        <span>🫐</span> <small>-3 Длины</small>
-                    </div>
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'purple')">
-                        <span>🍇</span> <small>Замедление</small>
-                    </div>
-                    <!-- Новые -->
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'cherry')">
-                        <span>🍒</span> <small>Взрыв (3x3)</small>
-                    </div>
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'lime')">
-                        <span>🍈</span> <small>Призрак (5с)</small>
-                    </div>
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'mushroom')">
-                        <span>🍄</span> <small>Магнит (Еда)</small>
-                    </div>
-                    <div class="toggle-item active" onclick="Setup.toggleFruit(this, 'chili')">
-                        <span>🌶</span> <small>Скорость x2</small>
-                    </div>
+                <div class="fruits-grid">
+                    <h4>Бонусы (клик для откл):</h4>
+                    <div class="fruit-toggle active" data-f="gold">🍌<span>+5</span></div>
+                    <div class="fruit-toggle active" data-f="blue">🫐<span>-3</span></div>
+                    <div class="fruit-toggle active" data-f="purple">🍇<span>Slow</span></div>
+                    <div class="fruit-toggle active" data-f="cherry">🍒<span>Boom</span></div>
+                    <div class="fruit-toggle active" data-f="lime">🍈<span>Ghost</span></div>
+                    <div class="fruit-toggle active" data-f="chili">🌶<span>Speed</span></div>
+                </div>
+
+                <div class="actions">
+                    <button class="primary-btn" onclick="SnakeGame.init()">ИГРАТЬ</button>
+                    <button class="text-btn" onclick="Nav.toMenu()">Назад</button>
                 </div>
             </div>
-            <button class="play-btn" onclick="SnakeGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
+        </section>
 
-        <!-- === НАСТРОЙКИ: 3 В РЯД === -->
-        <div id="screen-setup-match3" class="screen">
-            <h2>3 В РЯД</h2>
-            <div class="setup-block">
-                <label>Цели (цвета): <b id="val-m3-targets">2</b></label>
-                <input type="range" min="1" max="6" value="2" oninput="Setup.updateLabel('m3-targets', this.value)">
-            </div>
-            <div class="info-card">
-                <p>💎 Собирай линии 3+</p>
-                <p>⚡ 4+ дают доп. ходы</p>
-                <p>🎯 Выполни цели сверху</p>
-            </div>
-            <button class="play-btn" onclick="Match3Game.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
-
-        <!-- === НАСТРОЙКИ: МОРСКОЙ БОЙ === -->
-        <div id="screen-setup-battleship" class="screen">
-            <h2>МОРСКОЙ БОЙ</h2>
-            <div class="info-card">
-                <p>Ваш флот сверху.</p>
-                <p>Враг снизу (стреляй туда).</p>
-            </div>
-            <button class="play-btn" onclick="BSGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
-
-        <!-- === НАСТРОЙКИ: САПЕР === -->
-        <div id="screen-setup-sapper" class="screen">
-            <h2>САПЕР</h2>
-            <div class="setup-block">
-                <label>Сложность:</label>
-                <div class="row-btn">
-                    <button class="opt-btn active" onclick="Setup.setSapperDiff(this, 10)">Легко</button>
-                    <button class="opt-btn" onclick="Setup.setSapperDiff(this, 20)">Средне</button>
-                    <button class="opt-btn" onclick="Setup.setSapperDiff(this, 35)">Хард</button>
+        <!-- Setup: 3 в ряд -->
+        <section id="setup-match3" class="page setup-page">
+            <div class="setup-card">
+                <h2>💎 Настройка 3 в Ряд</h2>
+                <div class="setting-row">
+                    <label>Цели (цвета)</label>
+                    <input type="range" id="m3-targets" min="1" max="6" value="3" oninput="document.getElementById('m3-val').innerText=this.value">
+                    <span id="m3-val">3</span>
+                </div>
+                <div class="info-block">
+                    <p>Собирай линии по 3+ элемента.</p>
+                    <p>Линии 4 и 5 дают <b>дополнительные ходы</b>.</p>
+                </div>
+                <div class="actions">
+                    <button class="primary-btn" onclick="Match3.init()">ИГРАТЬ</button>
+                    <button class="text-btn" onclick="Nav.toMenu()">Назад</button>
                 </div>
             </div>
-            <button class="play-btn" onclick="SapperGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
+        </section>
 
-        <!-- === НАСТРОЙКИ: КРЕСТИКИ === -->
-        <div id="screen-setup-ttt" class="screen">
-            <h2>КРЕСТИКИ</h2>
-            <div class="info-card"><p>Классика 3x3.<br>Попробуй победить ИИ.</p></div>
-            <button class="play-btn" onclick="TTTGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
-
-        <!-- === ИГРОВЫЕ ЭКРАНЫ === -->
-
-        <div id="screen-game-snake" class="screen game-bg">
-            <div class="game-header">
-                <span id="snake-score">0</span>
-                <button class="mini-btn" onclick="Nav.toSetup('snake')">ВЫХОД</button>
-            </div>
-            <canvas id="snake-canvas" width="340" height="340"></canvas>
-            <!-- Индикатор эффектов -->
-            <div id="snake-effect" class="effect-bar"></div>
-            <div class="controls">
-                <button onclick="SnakeGame.input(0, -1)">▲</button>
-                <div class="mid-row">
-                    <button onclick="SnakeGame.input(-1, 0)">◄</button>
-                    <button onclick="SnakeGame.input(1, 0)">►</button>
+        <!-- Setup: Остальные (Универсальный) -->
+        <section id="setup-general" class="page setup-page">
+            <div class="setup-card">
+                <h2 id="setup-title">Игра</h2>
+                <p id="setup-desc">Описание</p>
+                <div class="actions">
+                    <button class="primary-btn" id="setup-start-btn">ИГРАТЬ</button>
+                    <button class="text-btn" onclick="Nav.toMenu()">Назад</button>
                 </div>
-                <button onclick="SnakeGame.input(0, 1)">▼</button>
             </div>
-        </div>
+        </section>
 
-        <div id="screen-game-match3" class="screen game-bg">
-            <div class="game-header-stack">
-                <div class="top">
-                    <span id="m3-moves">25</span>
-                    <button class="mini-btn" onclick="Nav.toSetup('match3')">ВЫХОД</button>
+
+        <!-- === ИГРОВЫЕ ПОЛЯ === -->
+
+        <!-- Game: Snake -->
+        <section id="game-snake" class="page game-page">
+            <div class="game-hud">
+                <div class="score-pill">🏆 <span id="snake-score-display">0</span></div>
+                <button class="icon-btn" onclick="Nav.toMenu()">✕</button>
+            </div>
+            <canvas id="snake-canvas"></canvas>
+            <div class="mobile-controls">
+                <div class="dpad">
+                    <button onclick="SnakeGame.input(0, -1)">▲</button>
+                    <div class="row">
+                        <button onclick="SnakeGame.input(-1, 0)">◀</button>
+                        <button onclick="SnakeGame.input(1, 0)">▶</button>
+                    </div>
+                    <button onclick="SnakeGame.input(0, 1)">▼</button>
                 </div>
-                <div id="m3-targets" class="targets-bar"></div>
             </div>
-            <div id="m3-board" class="m3-grid"></div>
-        </div>
+        </section>
 
-        <div id="screen-game-battleship" class="screen game-bg">
-            <div class="game-header">
-                <span id="bs-status">БОЙ!</span>
-                <button class="mini-btn" onclick="Nav.toSetup('battleship')">ВЫХОД</button>
+        <!-- Game: Match 3 -->
+        <section id="game-match3" class="page game-page">
+            <div class="game-hud">
+                <div class="moves-pill">⏳ <span id="m3-moves-display">20</span></div>
+                <button class="icon-btn" onclick="Nav.toMenu()">✕</button>
             </div>
-            <!-- ИЗМЕНЕН ПОРЯДОК: Игрок сверху, Враг снизу -->
-            <div class="bs-boards-area">
-                <div class="board-wrapper">
-                    <div class="bs-label">ВЫ (ВАШ ФЛОТ)</div>
+            <div id="m3-targets-display" class="targets-container"></div>
+            <div id="m3-grid" class="match3-grid"></div>
+        </section>
+
+        <!-- Game: Battleship -->
+        <section id="game-bs" class="page game-page">
+            <div class="game-hud">
+                <div class="status-text" id="bs-message">Расстановка...</div>
+                <button class="icon-btn" onclick="Nav.toMenu()">✕</button>
+            </div>
+            <div class="bs-wrapper">
+                <div class="bs-board-container">
+                    <span>ВАШ ФЛОТ</span>
                     <div id="bs-player" class="bs-grid small"></div>
                 </div>
-                <div class="vs-divider">VS</div>
-                <div class="board-wrapper">
-                    <div id="bs-enemy" class="bs-grid active-zone"></div>
-                    <div class="bs-label active">ВРАГ (СТРЕЛЯЙ СЮДА)</div>
+                <div class="bs-divider">VS</div>
+                <div class="bs-board-container active">
+                    <span>ВРАГ (АТАКА)</span>
+                    <div id="bs-enemy" class="bs-grid"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="screen-game-sapper" class="screen game-bg">
-            <div class="game-header">
-                <span id="sapper-count">💣 10</span>
-                <button class="mini-btn" onclick="Nav.toSetup('sapper')">ВЫХОД</button>
+        <!-- Game: Sapper/TTT (Container) -->
+        <section id="game-minigame" class="page game-page">
+            <div class="game-hud">
+                <div class="status-text" id="mg-status">Игра</div>
+                <button class="icon-btn" onclick="Nav.toMenu()">✕</button>
             </div>
-            <div id="sapper-field" class="sapper-grid"></div>
-            <div class="sapper-tools">
-                <button id="tool-dig" class="active" onclick="SapperGame.setTool('dig')">⛏ КОПАТЬ</button>
-                <button id="tool-flag" onclick="SapperGame.setTool('flag')">🚩 ФЛАГ</button>
-            </div>
-        </div>
-
-        <div id="screen-game-ttt" class="screen game-bg">
-            <div class="game-header">
-                <span id="ttt-msg">Ход: X</span>
-                <button class="mini-btn" onclick="Nav.toSetup('ttt')">ВЫХОД</button>
-            </div>
-            <div id="ttt-board" class="ttt-grid"></div>
-        </div>
-
-        <!-- === СТАТИСТИКА И ТЕМЫ (Без изменений в логике) === -->
-        <div id="screen-stats" class="screen">
-            <h2>СТАТИСТИКА</h2>
-            <div id="stats-list" class="stats-box"></div>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
-
-        <div id="screen-settings" class="screen">
-            <h2>ТЕМЫ</h2>
-            <div class="themes-grid">
-                <div class="theme-item blue" onclick="App.setTheme('blue')">BLUE</div>
-                <div class="theme-item green" onclick="App.setTheme('green')">EMERALD</div>
-                <div class="theme-item red" onclick="App.setTheme('red')">MARS</div>
-                <div class="theme-item purple" onclick="App.setTheme('purple')">NEON</div>
-                <div class="theme-item classic" onclick="App.setTheme('classic')">CLASSIC</div>
-                <div class="theme-item gray" onclick="App.setTheme('gray')">NOIR</div>
-            </div>
-            <button class="back-btn" onclick="Nav.show('screen-menu')">НАЗАД</button>
-        </div>
-
-        <!-- === МОДАЛЬНОЕ ОКНО === -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h2 id="modal-h">TITLE</h2>
-                <p id="modal-p">Text</p>
-                <button id="modal-btn">OK</button>
-            </div>
-        </div>
+            <div id="mg-container" class="mg-container"></div>
+            <div id="mg-controls" class="mg-controls"></div>
+        </section>
 
     </div>
-    <script src="script.js"></script>
+
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <h2 id="modal-title">Заголовок</h2>
+            <div id="modal-content">Контент</div>
+            <button class="primary-btn" onclick="Nav.closeModal()">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ -->
+    <script src="app.js"></script>
+    <script src="snake.js"></script>
+    <script src="match3.js"></script>
+    <script src="minigames.js"></script>
 </body>
 </html>

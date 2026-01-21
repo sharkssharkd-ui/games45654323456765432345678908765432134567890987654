@@ -12,47 +12,111 @@
         
         <!-- === ГЛАВНОЕ МЕНЮ === -->
         <div id="screen-menu" class="screen active">
-            <h1 class="logo">MEGA GAMES</h1>
+            <div class="logo-area">
+                <h1 class="logo">MEGA<br>GAMES</h1>
+                <div class="version">WEB EDITION</div>
+            </div>
             <div class="menu-grid">
-                <button class="game-btn" onclick="App.start('snake')">🐍 ЗМЕЙКА</button>
-                <button class="game-btn" onclick="App.start('match3')">💎 3 В РЯД</button>
-                <button class="game-btn" onclick="App.start('battleship')">⚓ МОРСКОЙ БОЙ</button>
-                <button class="game-btn" onclick="App.start('sapper')">💣 САПЕР</button>
-                <button class="game-btn" onclick="App.start('ttt')">❌ КРЕСТИКИ</button>
+                <button class="game-btn snake" onclick="Nav.toSetup('snake')">
+                    <span class="icon">🐍</span> <span class="label">ЗМЕЙКА</span>
+                </button>
+                <button class="game-btn match3" onclick="Nav.toSetup('match3')">
+                    <span class="icon">💎</span> <span class="label">3 В РЯД</span>
+                </button>
+                <button class="game-btn bs" onclick="Nav.toSetup('bs')">
+                    <span class="icon">⚓</span> <span class="label">МОРСКОЙ БОЙ</span>
+                </button>
+                <button class="game-btn ttt" onclick="Nav.toSetup('ttt')">
+                    <span class="icon">❌</span> <span class="label">КРЕСТИКИ</span>
+                </button>
+                <button class="game-btn sapper" onclick="Nav.toSetup('sapper')">
+                    <span class="icon">💣</span> <span class="label">САПЕР</span>
+                </button>
             </div>
             <div class="bottom-nav">
-                <button onclick="App.show('stats')">📊 СТАТИСТИКА</button>
-                <button onclick="App.show('settings')">⚙ НАСТРОЙКИ</button>
+                <button onclick="Nav.show('stats')">📊 СТАТИСТИКА</button>
+                <button onclick="Nav.show('settings')">⚙ НАСТРОЙКИ</button>
             </div>
         </div>
 
-        <!-- === СТАТИСТИКА === -->
-        <div id="screen-stats" class="screen">
-            <h2>ОБЩАЯ СТАТИСТИКА</h2>
-            <div id="stats-content" class="stats-table"></div>
-            <button class="back-btn" onclick="App.resetStats()">СБРОСИТЬ ВСЁ</button>
-            <button class="back-btn" onclick="App.show('menu')">НАЗАД</button>
-        </div>
-
-        <!-- === НАСТРОЙКИ === -->
-        <div id="screen-settings" class="screen">
-            <h2>ТЕМЫ</h2>
-            <div class="themes-grid">
-                <button onclick="App.setTheme('blue')" style="background:#2563EB">СИНЯЯ</button>
-                <button onclick="App.setTheme('green')" style="background:#059669">ИЗУМРУД</button>
-                <button onclick="App.setTheme('red')" style="background:#DC2626">МАРС</button>
-                <button onclick="App.setTheme('purple')" style="background:#9333EA">НЕОН</button>
+        <!-- === НАСТРОЙКИ ИГР (SETUP SCREENS) === -->
+        
+        <!-- Setup: Змейка -->
+        <div id="setup-snake" class="screen">
+            <h2>НАСТРОЙКИ: ЗМЕЙКА</h2>
+            <div class="setup-group">
+                <label>Скорость: <span id="val-snake-speed">Средняя</span></label>
+                <input type="range" min="1" max="10" value="5" oninput="Setup.updateLabel('snake-speed', this.value)">
             </div>
-            <button class="back-btn" onclick="App.show('menu')">НАЗАД</button>
+            <div class="setup-group">
+                <label>Стены:</label>
+                <div class="toggle-btn" id="btn-snake-walls" onclick="Setup.toggle('snake-walls')">ПРОХОДИМЫЕ</div>
+            </div>
+            <div class="info-box">
+                <p>🍌 Золото: +5 очков</p>
+                <p>🍇 Фиол: Замедление</p>
+                <p>🫐 Синий: -3 длины</p>
+            </div>
+            <button class="play-btn" onclick="SnakeGame.start()">ИГРАТЬ</button>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
         </div>
 
-        <!-- === ИГРА: ЗМЕЙКА === -->
-        <div id="screen-snake" class="screen">
-            <div class="header">
+        <!-- Setup: 3 в ряд -->
+        <div id="setup-match3" class="screen">
+            <h2>НАСТРОЙКИ: 3 В РЯД</h2>
+            <div class="setup-group">
+                <label>Количество целей: <span id="val-m3-targets">2</span></label>
+                <input type="range" min="1" max="5" value="2" oninput="Setup.updateLabel('m3-targets', this.value)">
+            </div>
+            <div class="info-box">
+                <p>Собери указанное количество камней.</p>
+                <p>Линия 4+ дает доп. ход!</p>
+            </div>
+            <button class="play-btn" onclick="Match3Game.start()">ИГРАТЬ</button>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+
+        <!-- Setup: TTT -->
+        <div id="setup-ttt" class="screen">
+            <h2>НАСТРОЙКИ: КРЕСТИКИ</h2>
+            <div class="setup-group">
+                <label>Режим:</label>
+                <div class="toggle-btn" id="btn-ttt-mode" onclick="Setup.toggle('ttt-mode', ['PvE', 'PvP'])">PvE (с ботом)</div>
+            </div>
+            <div class="setup-group">
+                <label>Сложность:</label>
+                <div class="toggle-btn" id="btn-ttt-diff" onclick="Setup.toggle('ttt-diff', ['ЛЕГКО', 'СЛОЖНО'])">СЛОЖНО</div>
+            </div>
+            <button class="play-btn" onclick="TTTGame.start()">ИГРАТЬ</button>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+
+        <!-- Остальные setup экраны (упрощено для краткости, они используют общий шаблон в JS) -->
+        <div id="setup-bs" class="screen">
+            <h2>МОРСКОЙ БОЙ</h2>
+            <div class="info-box"><p>Классические правила. Расстановка случайная.</p></div>
+            <button class="play-btn" onclick="BSGame.start()">ИГРАТЬ</button>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+        <div id="setup-sapper" class="screen">
+            <h2>САПЕР</h2>
+            <div class="setup-group">
+                <label>Сложность:</label>
+                <div class="toggle-btn" id="btn-sapper-diff" onclick="Setup.toggle('sapper-diff', ['ЛЕГКО', 'СРЕДНЕ', 'ХАРД'])">ЛЕГКО</div>
+            </div>
+            <button class="play-btn" onclick="SapperGame.start()">ИГРАТЬ</button>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+
+
+        <!-- === ЭКРАНЫ ИГР === -->
+
+        <div id="game-snake" class="screen game-screen">
+            <div class="game-header">
                 <span id="snake-score">0</span>
-                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+                <button class="small-btn" onclick="Nav.show('menu')">EXIT</button>
             </div>
-            <canvas id="snake-canvas" width="350" height="350"></canvas>
+            <canvas id="snake-canvas" width="340" height="340"></canvas>
             <div class="controls-pad">
                 <div class="row"><button onclick="SnakeGame.input(0, -1)">▲</button></div>
                 <div class="row">
@@ -61,64 +125,81 @@
                 </div>
                 <div class="row"><button onclick="SnakeGame.input(0, 1)">▼</button></div>
             </div>
-            <div class="info-text">Бонусы: 🍌(+5) 🫐(-хвост) 🍇(slow)</div>
         </div>
 
-        <!-- === ИГРА: 3 В РЯД === -->
-        <div id="screen-match3" class="screen">
-            <div class="header-stack">
-                <div class="top-row">
+        <div id="game-match3" class="screen game-screen">
+            <div class="game-header-stack">
+                <div class="top">
                     <span id="m3-moves">Ходы: 0</span>
-                    <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+                    <button class="small-btn" onclick="Nav.show('menu')">EXIT</button>
                 </div>
-                <div id="m3-targets" class="targets-row"></div>
+                <div id="m3-targets-row" class="targets-container"></div>
             </div>
-            <div id="m3-grid" class="match3-grid"></div>
+            <div id="m3-board" class="match3-board"></div>
         </div>
 
-        <!-- === ИГРА: МОРСКОЙ БОЙ === -->
-        <div id="screen-battleship" class="screen">
-            <div class="header">
-                <span id="bs-status">БОЙ!</span>
-                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
-            </div>
-            <div class="bs-boards">
-                <div class="board-container">
-                    <span>ВРАГ</span>
-                    <div id="bs-enemy" class="bs-grid"></div>
-                </div>
-                <div class="board-container">
-                    <span>ВЫ</span>
-                    <div id="bs-player" class="bs-grid"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- === ИГРА: САПЕР === -->
-        <div id="screen-sapper" class="screen">
-            <div class="header">
-                <span id="sapper-mines">💣 10</span>
-                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
-            </div>
-            <div class="sapper-controls">
-                <button id="btn-dig" class="active" onclick="SapperGame.setMode('dig')">КОПАТЬ</button>
-                <button id="btn-flag" onclick="SapperGame.setMode('flag')">ФЛАГ</button>
-            </div>
-            <div id="sapper-grid" class="sapper-grid"></div>
-        </div>
-
-        <!-- === ИГРА: КРЕСТИКИ === -->
-        <div id="screen-ttt" class="screen">
-            <div class="header">
+        <div id="game-ttt" class="screen game-screen">
+            <div class="game-header">
                 <span id="ttt-status">Ход: X</span>
-                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+                <button class="small-btn" onclick="Nav.show('menu')">EXIT</button>
             </div>
             <div id="ttt-grid" class="ttt-grid"></div>
-            <button class="restart-btn" onclick="TTTGame.init()">ЗАНОВО</button>
+        </div>
+
+        <div id="game-bs" class="screen game-screen">
+            <div class="game-header">
+                <span id="bs-msg">Бой!</span>
+                <button class="small-btn" onclick="Nav.show('menu')">EXIT</button>
+            </div>
+            <div class="bs-container">
+                <div class="bs-area"><span>ВРАГ</span><div id="bs-enemy" class="bs-grid"></div></div>
+                <div class="bs-area"><span>ВЫ</span><div id="bs-player" class="bs-grid"></div></div>
+            </div>
+        </div>
+
+        <div id="game-sapper" class="screen game-screen">
+            <div class="game-header">
+                <span id="sapper-stat">💣 10</span>
+                <button class="small-btn" onclick="Nav.show('menu')">EXIT</button>
+            </div>
+            <div class="sapper-tools">
+                <button id="tool-dig" class="tool active" onclick="SapperGame.setTool('dig')">⛏ КОПАТЬ</button>
+                <button id="tool-flag" class="tool" onclick="SapperGame.setTool('flag')">🚩 ФЛАГ</button>
+            </div>
+            <div id="sapper-field" class="sapper-grid"></div>
+        </div>
+
+        <!-- === СТАТИСТИКА И НАСТРОЙКИ === -->
+        <div id="screen-stats" class="screen">
+            <h2>СТАТИСТИКА</h2>
+            <div id="stats-list" class="stats-box"></div>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+
+        <div id="screen-settings" class="screen">
+            <h2>НАСТРОЙКИ</h2>
+            <p>Выберите тему:</p>
+            <div class="themes-list">
+                <div class="theme-c blue" onclick="App.setTheme('blue')"></div>
+                <div class="theme-c green" onclick="App.setTheme('green')"></div>
+                <div class="theme-c red" onclick="App.setTheme('red')"></div>
+                <div class="theme-c purple" onclick="App.setTheme('purple')"></div>
+            </div>
+            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
+        </div>
+
+        <!-- === МОДАЛЬНОЕ ОКНО (Вместо alert) === -->
+        <div id="modal-overlay" class="modal-overlay">
+            <div class="modal-box">
+                <h2 id="modal-title">TITLE</h2>
+                <p id="modal-msg">Message</p>
+                <div class="modal-btns">
+                    <button onclick="Modal.close()">OK</button>
+                </div>
+            </div>
         </div>
 
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

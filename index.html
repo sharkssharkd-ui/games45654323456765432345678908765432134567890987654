@@ -2,66 +2,121 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA GAMES WEB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEGA GAMES PRO</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
-        <!-- ГЛАВНОЕ МЕНЮ -->
-        <div id="menu-screen" class="screen active">
-            <h1 class="title">MEGA GAMES</h1>
+        
+        <!-- === ГЛАВНОЕ МЕНЮ === -->
+        <div id="screen-menu" class="screen active">
+            <h1 class="logo">MEGA GAMES</h1>
             <div class="menu-grid">
-                <button onclick="startGame('snake')">🐍 ЗМЕЙКА</button>
-                <button onclick="startGame('ttt')">❌ КРЕСТИКИ</button>
-                <button onclick="startGame('match3')">💎 3 В РЯД</button>
-                <button onclick="startGame('clicker')">💣 САПЕР (Скоро)</button>
+                <button class="game-btn" onclick="App.start('snake')">🐍 ЗМЕЙКА</button>
+                <button class="game-btn" onclick="App.start('match3')">💎 3 В РЯД</button>
+                <button class="game-btn" onclick="App.start('battleship')">⚓ МОРСКОЙ БОЙ</button>
+                <button class="game-btn" onclick="App.start('sapper')">💣 САПЕР</button>
+                <button class="game-btn" onclick="App.start('ttt')">❌ КРЕСТИКИ</button>
             </div>
-            <div class="stats-box">
-                <p>Ваши рекорды сохраняются автоматически!</p>
+            <div class="bottom-nav">
+                <button onclick="App.show('stats')">📊 СТАТИСТИКА</button>
+                <button onclick="App.show('settings')">⚙ НАСТРОЙКИ</button>
             </div>
         </div>
 
-        <!-- ЭКРАН ИГРЫ: ЗМЕЙКА -->
-        <div id="snake-screen" class="screen">
-            <div class="header">
-                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
-                <span id="snake-score">Счет: 0</span>
+        <!-- === СТАТИСТИКА === -->
+        <div id="screen-stats" class="screen">
+            <h2>ОБЩАЯ СТАТИСТИКА</h2>
+            <div id="stats-content" class="stats-table"></div>
+            <button class="back-btn" onclick="App.resetStats()">СБРОСИТЬ ВСЁ</button>
+            <button class="back-btn" onclick="App.show('menu')">НАЗАД</button>
+        </div>
+
+        <!-- === НАСТРОЙКИ === -->
+        <div id="screen-settings" class="screen">
+            <h2>ТЕМЫ</h2>
+            <div class="themes-grid">
+                <button onclick="App.setTheme('blue')" style="background:#2563EB">СИНЯЯ</button>
+                <button onclick="App.setTheme('green')" style="background:#059669">ИЗУМРУД</button>
+                <button onclick="App.setTheme('red')" style="background:#DC2626">МАРС</button>
+                <button onclick="App.setTheme('purple')" style="background:#9333EA">НЕОН</button>
             </div>
-            <canvas id="snake-canvas" width="400" height="400"></canvas>
-            <div class="controls-hint">Управление: WASD или Стрелки</div>
-            <div class="mobile-controls">
-                <button onclick="snakeDir(0, -1)">⬆️</button>
+            <button class="back-btn" onclick="App.show('menu')">НАЗАД</button>
+        </div>
+
+        <!-- === ИГРА: ЗМЕЙКА === -->
+        <div id="screen-snake" class="screen">
+            <div class="header">
+                <span id="snake-score">0</span>
+                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+            </div>
+            <canvas id="snake-canvas" width="350" height="350"></canvas>
+            <div class="controls-pad">
+                <div class="row"><button onclick="SnakeGame.input(0, -1)">▲</button></div>
                 <div class="row">
-                    <button onclick="snakeDir(-1, 0)">⬅️</button>
-                    <button onclick="snakeDir(1, 0)">➡️</button>
+                    <button onclick="SnakeGame.input(-1, 0)">◄</button>
+                    <button onclick="SnakeGame.input(1, 0)">►</button>
                 </div>
-                <button onclick="snakeDir(0, 1)">⬇️</button>
+                <div class="row"><button onclick="SnakeGame.input(0, 1)">▼</button></div>
             </div>
+            <div class="info-text">Бонусы: 🍌(+5) 🫐(-хвост) 🍇(slow)</div>
         </div>
 
-        <!-- ЭКРАН ИГРЫ: КРЕСТИКИ -->
-        <div id="ttt-screen" class="screen">
-            <div class="header">
-                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
-                <span id="ttt-status">Ход: X</span>
-            </div>
-            <div class="ttt-grid" id="ttt-board">
-                <!-- Клетки создаются JS -->
-            </div>
-            <button class="restart-btn" onclick="initTTT()">Заново</button>
-        </div>
-
-        <!-- ЭКРАН ИГРЫ: 3 В РЯД -->
-        <div id="match3-screen" class="screen">
-            <div class="header">
-                <button class="back-btn" onclick="showMenu()">↩ МЕНЮ</button>
-                <span id="m3-score">Очки: 0</span>
+        <!-- === ИГРА: 3 В РЯД === -->
+        <div id="screen-match3" class="screen">
+            <div class="header-stack">
+                <div class="top-row">
+                    <span id="m3-moves">Ходы: 0</span>
+                    <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+                </div>
+                <div id="m3-targets" class="targets-row"></div>
             </div>
             <div id="m3-grid" class="match3-grid"></div>
-            <div class="controls-hint">Кликай, чтобы менять местами</div>
         </div>
+
+        <!-- === ИГРА: МОРСКОЙ БОЙ === -->
+        <div id="screen-battleship" class="screen">
+            <div class="header">
+                <span id="bs-status">БОЙ!</span>
+                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+            </div>
+            <div class="bs-boards">
+                <div class="board-container">
+                    <span>ВРАГ</span>
+                    <div id="bs-enemy" class="bs-grid"></div>
+                </div>
+                <div class="board-container">
+                    <span>ВЫ</span>
+                    <div id="bs-player" class="bs-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === ИГРА: САПЕР === -->
+        <div id="screen-sapper" class="screen">
+            <div class="header">
+                <span id="sapper-mines">💣 10</span>
+                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+            </div>
+            <div class="sapper-controls">
+                <button id="btn-dig" class="active" onclick="SapperGame.setMode('dig')">КОПАТЬ</button>
+                <button id="btn-flag" onclick="SapperGame.setMode('flag')">ФЛАГ</button>
+            </div>
+            <div id="sapper-grid" class="sapper-grid"></div>
+        </div>
+
+        <!-- === ИГРА: КРЕСТИКИ === -->
+        <div id="screen-ttt" class="screen">
+            <div class="header">
+                <span id="ttt-status">Ход: X</span>
+                <button class="small-btn" onclick="App.show('menu')">МЕНЮ</button>
+            </div>
+            <div id="ttt-grid" class="ttt-grid"></div>
+            <button class="restart-btn" onclick="TTTGame.init()">ЗАНОВО</button>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

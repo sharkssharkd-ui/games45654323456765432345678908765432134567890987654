@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA GAMES WEB</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <title>MEGA GAMES</title>
+    <!-- Прямая ссылка на CSS в той же папке -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-blue">
 
@@ -20,12 +20,12 @@
     <div id="screen-menu" class="screen active">
         <h1 class="title">MEGA GAMES</h1>
         <div class="menu-grid">
-            <button class="btn btn-chess" onclick="nav.to('chess-menu')">ШАХМАТЫ</button>
+            <button class="btn btn-chess" onclick="alert('Шахматы пока в разработке (нужен ИИ)')">ШАХМАТЫ</button>
             <button class="btn btn-ttt" onclick="nav.to('ttt-menu')">КРЕСТИКИ-НОЛИКИ</button>
-            <button class="btn btn-sapper" onclick="nav.to('sapper-game')">САПЕР</button>
-            <button class="btn btn-bs" onclick="nav.to('bs-menu')">МОРСКОЙ БОЙ</button>
+            <button class="btn btn-sapper" onclick="alert('Сапер в разработке')">САПЕР</button>
+            <button class="btn btn-bs" onclick="alert('Морской бой в разработке')">МОРСКОЙ БОЙ</button>
             <button class="btn btn-snake" onclick="nav.to('snake-menu')">ЗМЕЙКА</button>
-            <button class="btn btn-m3" onclick="nav.to('match3-menu')">3 В РЯД</button>
+            <button class="btn btn-m3" onclick="alert('3 в ряд в разработке')">3 В РЯД</button>
         </div>
         <div class="bottom-controls">
             <button class="btn btn-gray" onclick="nav.to('settings')">НАСТРОЙКИ</button>
@@ -52,7 +52,7 @@
         <canvas id="snake-canvas" width="400" height="400"></canvas>
     </div>
 
-    <!-- ИГРА КРЕСТИКИ-НОЛИКИ -->
+    <!-- МЕНЮ КРЕСТИКИ-НОЛИКИ -->
     <div id="screen-ttt-menu" class="screen">
         <h2>X / O</h2>
         <button class="btn btn-ttt" onclick="tttGame.start('pvp')">ИГРАТЬ ВДВОЕМ</button>
@@ -60,17 +60,16 @@
         <button class="btn btn-back" onclick="nav.to('menu')">НАЗАД</button>
     </div>
 
+    <!-- ИГРА КРЕСТИКИ-НОЛИКИ -->
     <div id="screen-ttt-game" class="screen">
         <div class="game-header">
             <span id="ttt-status">Ход: X</span>
             <button class="btn-small" onclick="nav.to('ttt-menu')">МЕНЮ</button>
         </div>
-        <div class="ttt-grid" id="ttt-board">
-            <!-- Клетки генерируются JS -->
-        </div>
+        <div class="ttt-grid" id="ttt-board"></div>
     </div>
 
-    <!-- НАСТРОЙКИ (ТЕМЫ) -->
+    <!-- НАСТРОЙКИ -->
     <div id="screen-settings" class="screen">
         <h2>ТЕМЫ</h2>
         <div class="menu-grid">
@@ -84,7 +83,7 @@
         <button class="btn btn-back" onclick="nav.to('menu')">НАЗАД</button>
     </div>
 
-    <!-- СКРИПТЫ -->
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- Прямая ссылка на JS -->
+    <script src="script.js"></script>
 </body>
 </html>

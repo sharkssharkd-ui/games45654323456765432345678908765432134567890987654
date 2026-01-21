@@ -1,144 +1,142 @@
+:root {
+    --bg-color: #0B1026;
+    --btn-color: #2563EB;
+    --text-color: #FFFFFF;
+    --panel-color: #1E3A8A;
+    --accent: #60A5FA;
+}
+
+/* ТЕМЫ */
+body.theme-green { --bg-color: #064E3B; --btn-color: #10B981; --panel-color: #065f46; --accent: #6EE7B7; }
+body.theme-red { --bg-color: #450A0A; --btn-color: #DC2626; --panel-color: #7f1d1d; --accent: #FECACA; }
+body.theme-purple { --bg-color: #2E1065; --btn-color: #9333EA; --panel-color: #581c87; --accent: #E9D5FF; }
+
 body {
-    background-color: #0B1026;
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    touch-action: manipulation; /* Убирает задержку тапа на мобилках */
+    overflow: hidden;
+    user-select: none;
 }
 
 .app-container {
     width: 100%;
-    max-width: 500px;
-    text-align: center;
+    max-width: 450px;
+    height: 100vh;
+    position: relative;
 }
 
 .screen {
-    display: none; /* Скрываем все экраны */
+    display: none;
     flex-direction: column;
-    align-items: center;
+    height: 100%;
     padding: 20px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
 }
+.screen.active { display: flex; }
 
-.screen.active {
-    display: flex; /* Показываем активный */
-}
-
-h1.title {
-    font-size: 3rem;
-    color: #60A5FA;
-    text-shadow: 0 0 10px #2563EB;
-    margin-bottom: 40px;
-}
+h1, h2 { text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
 button {
-    background: #2563EB;
+    background: var(--btn-color);
     color: white;
     border: none;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border-radius: 15px;
-    margin: 10px;
-    cursor: pointer;
-    transition: transform 0.1s, background 0.2s;
-    width: 80%;
-    font-weight: bold;
-    box-shadow: 0 4px 0 #1E3A8A;
-}
-
-button:active {
-    transform: translateY(4px);
-    box-shadow: none;
-}
-
-.back-btn {
-    background: #374151;
-    width: auto;
-    padding: 8px 15px;
+    padding: 12px;
     font-size: 1rem;
-    box-shadow: 0 4px 0 #1F2937;
+    font-weight: bold;
+    border-radius: 12px;
+    margin: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
 }
+button:active { transform: translateY(2px); box-shadow: none; }
+
+.menu-grid { display: flex; flex-direction: column; width: 100%; gap: 10px; }
+.bottom-nav { display: flex; width: 100%; justify-content: space-between; margin-top: 20px; }
+.bottom-nav button { width: 48%; background: #4B5563; }
 
 .header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-size: 1.5rem;
     font-weight: bold;
 }
+.small-btn { font-size: 0.8rem; padding: 5px 10px; background: #4B5563; }
 
-/* --- ЗМЕЙКА --- */
-canvas {
-    background: #111827;
-    border: 2px solid #374151;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    max-width: 100%;
-}
+/* ЗМЕЙКА */
+#snake-canvas { background: rgba(0,0,0,0.2); border-radius: 10px; border: 2px solid var(--panel-color); }
+.controls-pad { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
+.controls-pad button { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.1); font-size: 1.5rem; }
+.row { display: flex; gap: 10px; }
+.info-text { font-size: 0.8rem; opacity: 0.7; margin-top: 10px; }
 
-.mobile-controls {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.mobile-controls button {
-    width: 60px;
-    height: 60px;
-    margin: 5px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    padding: 0;
-}
-.row { display: flex; }
-
-/* --- TTT --- */
-.ttt-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    background: #1E3A8A;
-    padding: 10px;
-    border-radius: 15px;
-}
-.ttt-cell {
-    width: 80px;
-    height: 80px;
-    background: #0B1026;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 8px;
-}
-.cell-x { color: #38bdf8; }
-.cell-o { color: #a78bfa; }
-
-/* --- MATCH 3 --- */
+/* 3 В РЯД */
 .match3-grid {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 2px;
-    background: #1f2937;
+    background: var(--panel-color);
     padding: 5px;
     border-radius: 10px;
 }
-.gem {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+.gem { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+.gem.selected { border-color: white; transform: scale(1.1); }
+.targets-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; justify-content: center; }
+.target-item { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; }
+.dot { width: 15px; height: 15px; border-radius: 50%; display: inline-block; }
+
+/* МОРСКОЙ БОЙ */
+.bs-boards { display: flex; gap: 10px; flex-direction: column; }
+.board-container { text-align: center; }
+.bs-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 1px;
+    background: var(--panel-color);
+    padding: 2px;
+    width: 300px;
+    height: 300px;
+}
+.bs-cell { background: var(--bg-color); cursor: pointer; }
+.bs-cell.hit { background: #EF4444; }
+.bs-cell.miss { background: #9CA3AF; }
+.bs-cell.ship { background: #3B82F6; } /* Только для игрока */
+.bs-cell.last { border: 2px solid yellow; }
+
+/* САПЕР */
+.sapper-grid {
+    display: grid;
+    gap: 2px;
+    background: #4B5563;
+    padding: 5px;
+    border-radius: 5px;
+}
+.sapper-cell {
+    width: 30px;
+    height: 30px;
+    background: var(--panel-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s;
-    border: 2px solid transparent;
 }
-.gem.selected {
-    border-color: white;
-    transform: scale(1.1);
-}
+.sapper-cell.revealed { background: rgba(0,0,0,0.2); }
+.sapper-controls button { width: 45%; opacity: 0.5; }
+.sapper-controls button.active { opacity: 1; border: 2px solid white; }
+
+/* TTT */
+.ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; background: var(--panel-color); padding: 5px; }
+.ttt-cell { width: 80px; height: 80px; background: var(--bg-color); display: flex; justify-content: center; align-items: center; font-size: 3rem; }
+
+.stats-table { text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; width: 100%; }

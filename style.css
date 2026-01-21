@@ -1,190 +1,137 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MEGA GAMES ULTRA</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+:root {
+    --bg: #0B1026; --panel: #1E3A8A; --accent: #60A5FA; --text: #fff;
+    --grad-start: #2563EB; --grad-end: #1D4ED8;
+}
 
-    <div class="app-container">
-        
-        <!-- === МЕНЮ === -->
-        <div id="screen-menu" class="screen active">
-            <div class="logo-area">
-                <h1 class="logo">MEGA<br>GAMES</h1>
-            </div>
-            <div class="menu-grid">
-                <button class="game-btn" onclick="Nav.toSetup('snake')">
-                    <!-- SVG Иконка Змеи -->
-                    <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>
-                    <span>ЗМЕЙКА</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('match3')">
-                    <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2L2,12L12,22L22,12L12,2Z"/></svg>
-                    <span>3 В РЯД</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('battleship')">
-                    <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C9,2 7,3 6,4C5,5 4,7 4,9C4,11 5,13 6,14C7,15 9,16 12,16C15,16 17,15 18,14C19,13 20,11 20,9C20,7 19,5 18,4C17,3 15,2 12,2M12,4C14.5,4 16,5.5 16,9C16,12.5 14.5,14 12,14C9.5,14 8,12.5 8,9C8,5.5 9.5,4 12,4M12,17C7,17 3,18 2,19V22H22V19C21,18 17,17 12,17Z"/></svg>
-                    <span>МОРСКОЙ БОЙ</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('ttt')">
-                    <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
-                    <span>КРЕСТИКИ</span>
-                </button>
-                <button class="game-btn" onclick="Nav.toSetup('sapper')">
-                    <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
-                    <span>САПЕР</span>
-                </button>
-            </div>
-            <div class="bottom-nav">
-                <button onclick="Nav.show('stats')">📊 СТАТИСТИКА</button>
-                <button onclick="Nav.show('settings')">⚙ НАСТРОЙКИ</button>
-            </div>
-        </div>
+/* === ТЕМЫ === */
+body.theme-blue { --bg:#0B1026; --panel:#1E3A8A; --accent:#60A5FA; --grad-start:#2563EB; --grad-end:#1D4ED8; }
+body.theme-green { --bg:#064E3B; --panel:#047857; --accent:#34D399; --grad-start:#10B981; --grad-end:#059669; }
+body.theme-red { --bg:#450A0A; --panel:#991B1B; --accent:#F87171; --grad-start:#DC2626; --grad-end:#B91C1C; }
+body.theme-purple { --bg:#2E1065; --panel:#6D28D9; --accent:#C084FC; --grad-start:#9333EA; --grad-end:#7E22CE; }
+body.theme-classic { --bg:#3E2723; --panel:#5D4037; --accent:#D7CCC8; --grad-start:#8D6E63; --grad-end:#6D4C41; }
+body.theme-gray { --bg:#111827; --panel:#374151; --accent:#D1D5DB; --grad-start:#4B5563; --grad-end:#1F2937; }
 
-        <!-- === НАСТРОЙКИ (SETUP) === -->
-        <div id="setup-snake" class="screen">
-            <h2>ЗМЕЙКА</h2>
-            <div class="setup-block">
-                <label>Скорость: <b id="val-snake-speed">5</b></label>
-                <input type="range" min="1" max="10" value="5" oninput="Setup.updateLabel('snake-speed', this.value)">
-            </div>
-            <div class="setup-block">
-                <label>Яблоки: <b id="val-snake-apples">1</b></label>
-                <input type="range" min="1" max="5" value="1" oninput="Setup.updateLabel('snake-apples', this.value)">
-            </div>
-            <div class="info-card">
-                <p>🍌 +5 очков</p>
-                <p>🍇 Замедление</p>
-                <p>🫐 -3 длины</p>
-            </div>
-            <button class="play-btn" onclick="SnakeGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden; touch-action: none; transition: background 0.3s;
+}
 
-        <div id="setup-match3" class="screen">
-            <h2>3 В РЯД</h2>
-            <div class="setup-block">
-                <label>Цели (цвета): <b id="val-m3-targets">2</b></label>
-                <input type="range" min="1" max="6" value="2" oninput="Setup.updateLabel('m3-targets', this.value)">
-            </div>
-            <button class="play-btn" onclick="Match3Game.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+.app-container {
+    width: 100%; height: 100vh;
+    display: flex; justify-content: center;
+    position: relative;
+}
 
-        <div id="setup-battleship" class="screen">
-            <h2>МОРСКОЙ БОЙ</h2>
-            <div class="info-card"><p>Случайная расстановка кораблей.</p></div>
-            <button class="play-btn" onclick="BSGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+/* ЭКРАНЫ */
+.screen {
+    display: none;
+    width: 100%; max-width: 500px;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: absolute;
+    background: var(--bg);
+    box-sizing: border-box;
+    overflow-y: auto;
+    z-index: 1;
+}
+.screen.active { display: flex; z-index: 10; animation: fadein 0.2s ease-out; }
+@keyframes fadein { from{transform:scale(0.98); opacity:0} to{transform:scale(1); opacity:1} }
 
-        <div id="setup-sapper" class="screen">
-            <h2>САПЕР</h2>
-            <div class="info-card"><p>Классика. 10 мин.</p></div>
-            <button class="play-btn" onclick="SapperGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+.game-bg { justify-content: flex-start; overflow: hidden; }
 
-        <div id="setup-ttt" class="screen">
-            <h2>КРЕСТИКИ</h2>
-            <div class="info-card"><p>Игра против компьютера.</p></div>
-            <button class="play-btn" onclick="TTTGame.start()">ИГРАТЬ</button>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+/* ТИПОГРАФИКА */
+h1, h2 { margin: 10px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.5); text-align:center; color: var(--accent); }
+.logo { font-size: 3rem; line-height: 0.9; margin: 30px 0 10px; }
+.version { font-size: 0.8rem; opacity: 0.5; margin-bottom: 20px; letter-spacing: 2px; }
 
-        <!-- === ИГРОВЫЕ ЭКРАНЫ === -->
-        <div id="game-snake" class="screen game-bg">
-            <div class="header">
-                <span id="snake-score">0</span>
-                <button class="mini-btn" onclick="Nav.show('menu')">ВЫХОД</button>
-            </div>
-            <canvas id="snake-canvas" width="340" height="340"></canvas>
-            <div class="controls">
-                <button onclick="SnakeGame.input(0, -1)">▲</button>
-                <div class="mid-row">
-                    <button onclick="SnakeGame.input(-1, 0)">◄</button>
-                    <button onclick="SnakeGame.input(1, 0)">►</button>
-                </div>
-                <button onclick="SnakeGame.input(0, 1)">▼</button>
-            </div>
-        </div>
+button { font-family:inherit; cursor:pointer; user-select:none; border: none; outline: none; }
 
-        <div id="game-match3" class="screen game-bg">
-            <div class="header-stack">
-                <div class="top">
-                    <span id="m3-moves">25</span>
-                    <button class="mini-btn" onclick="Nav.show('menu')">ВЫХОД</button>
-                </div>
-                <div id="m3-targets" class="targets-bar"></div>
-            </div>
-            <div id="m3-board" class="m3-grid"></div>
-        </div>
+/* МЕНЮ */
+.menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; margin-top: 20px; }
+.game-btn {
+    background: var(--panel); border: 2px solid rgba(255,255,255,0.1);
+    color: var(--text); padding: 15px; border-radius: 15px;
+    font-size: 1.2rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: flex-start; gap: 15px;
+    transition: transform 0.1s, background 0.2s;
+}
+.game-btn:active { transform: scale(0.98); background: var(--accent); border-color: transparent; }
+.game-btn svg { width: 30px; height: 30px; fill: var(--accent); min-width: 30px; }
+.game-btn:active svg { fill: white; }
 
-        <div id="game-battleship" class="screen game-bg">
-            <div class="header">
-                <span id="bs-status">БОЙ!</span>
-                <button class="mini-btn" onclick="Nav.show('menu')">ВЫХОД</button>
-            </div>
-            <div class="bs-boards-area">
-                <div class="board-wrapper"><span>ВРАГ</span><div id="bs-enemy" class="bs-grid"></div></div>
-                <div class="board-wrapper"><span>ВЫ</span><div id="bs-player" class="bs-grid"></div></div>
-            </div>
-        </div>
+.bottom-nav { margin-top: auto; display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
+.bottom-nav button { flex: 1; background: rgba(255,255,255,0.1); color: #fff; padding: 15px; border-radius: 10px; font-weight: bold; }
 
-        <div id="game-sapper" class="screen game-bg">
-            <div class="header">
-                <span id="sapper-count">💣 10</span>
-                <button class="mini-btn" onclick="Nav.show('menu')">ВЫХОД</button>
-            </div>
-            <div id="sapper-field" class="sapper-grid"></div>
-            <div class="sapper-tools">
-                <button id="tool-dig" class="active" onclick="SapperGame.setTool('dig')">⛏</button>
-                <button id="tool-flag" onclick="SapperGame.setTool('flag')">🚩</button>
-            </div>
-        </div>
+/* ЭЛЕМЕНТЫ */
+.play-btn { width:100%; padding:15px; border-radius:12px; background:linear-gradient(135deg, var(--grad-start), var(--grad-end)); color:white; font-weight:bold; font-size:1.2rem; margin-top:auto; box-shadow:0 5px 15px rgba(0,0,0,0.3); }
+.back-btn { width:100%; padding:12px; margin-top:10px; background:transparent; border:2px solid rgba(255,255,255,0.2); border-radius:12px; color:white; font-weight:bold; }
+.mini-btn { padding:5px 10px; border-radius:6px; background:rgba(255,255,255,0.15); color:white; font-weight:bold; font-size:0.8rem; }
+.game-header { width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; min-height: 40px; }
 
-        <div id="game-ttt" class="screen game-bg">
-            <div class="header">
-                <span id="ttt-msg">Ход: X</span>
-                <button class="mini-btn" onclick="Nav.show('menu')">ВЫХОД</button>
-            </div>
-            <div id="ttt-board" class="ttt-grid"></div>
-        </div>
+/* SETUP */
+.setup-block { width:100%; background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; margin-bottom:10px; }
+.setup-block label { display:block; margin-bottom:10px; font-weight:bold; }
+input[type=range] { width:100%; accent-color:var(--accent); cursor: pointer; }
+.info-card { width:100%; background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; font-size:0.9rem; line-height:1.4; border-left:4px solid var(--accent); margin-bottom: 10px; text-align: left; }
 
-        <!-- === СТАТИСТИКА === -->
-        <div id="screen-stats" class="screen">
-            <h2>СТАТИСТИКА</h2>
-            <div id="stats-list" class="stats-box"></div>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+/* ЗМЕЙКА */
+#snake-canvas { background:rgba(0,0,0,0.3); border-radius:10px; border:2px solid var(--panel); box-shadow: inset 0 0 20px rgba(0,0,0,0.5); image-rendering: pixelated; }
+.controls { margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:5px; }
+.controls button { width:70px; height:60px; background:rgba(255,255,255,0.1); border-radius:15px; font-size:1.5rem; color:var(--text); }
+.controls button:active { background: var(--accent); }
+.mid-row { display:flex; gap:5px; }
 
-        <!-- === НАСТРОЙКИ (ТЕМЫ) === -->
-        <div id="screen-settings" class="screen">
-            <h2>ТЕМЫ</h2>
-            <div class="themes-grid">
-                <div class="theme-item blue" onclick="App.setTheme('blue')">BLUE</div>
-                <div class="theme-item green" onclick="App.setTheme('green')">EMERALD</div>
-                <div class="theme-item red" onclick="App.setTheme('red')">MARS</div>
-                <div class="theme-item purple" onclick="App.setTheme('purple')">NEON</div>
-                <div class="theme-item classic" onclick="App.setTheme('classic')">CLASSIC</div>
-                <div class="theme-item gray" onclick="App.setTheme('gray')">NOIR</div>
-            </div>
-            <button class="back-btn" onclick="Nav.show('menu')">НАЗАД</button>
-        </div>
+/* 3 В РЯД */
+.m3-grid { position:relative; width:320px; height:320px; background:rgba(0,0,0,0.2); border-radius:10px; border:2px solid var(--panel); margin:0 auto; touch-action: none; }
+.gem { position:absolute; width:36px; height:36px; border-radius:50%; box-shadow:inset -2px -2px 5px rgba(0,0,0,0.5), inset 2px 2px 5px rgba(255,255,255,0.3); transition:top 0.2s, left 0.2s; cursor:pointer; z-index:10; }
+.gem.selected { transform:scale(1.2); box-shadow:0 0 10px white; z-index:20; background-color: white !important; }
+.game-header-stack { width: 100%; margin-bottom: 10px; }
+.game-header-stack .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; font-size: 1.2rem; }
+.targets-bar { display:flex; gap:8px; justify-content:center; padding:5px; flex-wrap: wrap; }
+.target-chip { background:rgba(0,0,0,0.3); padding:4px 10px; border-radius:15px; display:flex; align-items:center; gap:5px; font-size:0.9rem; font-weight:bold; }
+.tiny-gem { width:12px; height:12px; border-radius:50%; display:block; }
 
-        <!-- === МОДАЛЬНОЕ ОКНО === -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h2 id="modal-h">TITLE</h2>
-                <p id="modal-p">Text</p>
-                <button onclick="Modal.close()">OK</button>
-            </div>
-        </div>
+/* МОРСКОЙ БОЙ */
+.bs-boards-area { display:flex; flex-direction:column; gap:15px; align-items:center; }
+.board-wrapper { text-align: center; font-size: 0.9rem; font-weight: bold; color: var(--accent); }
+.bs-grid { display:grid; grid-template-columns:repeat(10, 1fr); gap:1px; background:var(--panel); border:2px solid var(--panel); width:260px; height:260px; margin-top: 5px; }
+.bs-cell { background:var(--bg); cursor:pointer; }
+.bs-cell.hit { background:#EF4444; }
+.bs-cell.miss { background:rgba(255,255,255,0.1); }
+.bs-cell.ship { background:var(--accent); }
+.bs-cell.last { border:2px solid yellow; z-index:2; }
 
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+/* САПЕР */
+.sapper-grid { display:grid; gap:1px; background:#4B5563; border:2px solid #4B5563; padding:1px; margin:0 auto; }
+.sapper-cell { width:32px; height:32px; background:var(--panel); display:flex; justify-content:center; align-items:center; font-weight:bold; cursor:pointer; user-select:none; font-size: 1.2rem; }
+.sapper-cell.revealed { background:rgba(0,0,0,0.2); }
+.sapper-tools { display:flex; gap:10px; width:100%; margin-top:10px; max-width: 340px; }
+.tool { flex:1; padding:10px; background:rgba(255,255,255,0.1); border:2px solid transparent; border-radius:8px; font-size:1.2rem; color:white; font-weight: bold; }
+.tool.active { border-color:var(--accent); background:rgba(255,255,255,0.2); }
+
+/* КРЕСТИКИ */
+.ttt-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:5px; width:300px; height:300px; margin:0 auto; background:var(--panel); padding:5px; border-radius:10px; }
+.ttt-cell { background:var(--bg); display:flex; justify-content:center; align-items:center; font-size:4rem; font-weight:bold; cursor:pointer; border-radius: 5px; }
+
+/* СТАТИСТИКА */
+.stats-box { width:100%; text-align:left; background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; }
+.stats-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+
+/* ТЕМЫ */
+.themes-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; width: 100%; }
+.theme-item { padding:20px; text-align:center; font-weight:bold; border-radius:10px; border:2px solid rgba(255,255,255,0.1); cursor:pointer; transition: 0.2s; }
+.theme-item:active { transform: scale(0.95); }
+.theme-item.blue { background:#1E3A8A; } .theme-item.green { background:#064E3B; }
+.theme-item.red { background:#7F1D1D; } .theme-item.purple { background:#581C87; }
+.theme-item.classic { background:#5D4037; } .theme-item.gray { background:#374151; }
+
+/* МОДАЛКА */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; }
+.modal.show { display:flex; animation:popIn 0.2s; }
+.modal-content { background:var(--panel); padding:30px; border-radius:20px; text-align:center; width:80%; max-width:300px; border:1px solid rgba(255,255,255,0.2); box-shadow:0 10px 40px rgba(0,0,0,0.5); }
+.modal-content h2 { color:var(--accent); margin-top:0; }
+.modal-content button { width:100%; margin-top:20px; background:var(--grad-start); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size: 1rem; }

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA GAMES WEB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body class="theme-blue">
+
+    <!-- ФОНОВЫЕ ИКОНКИ -->
+    <div class="bg-icons">
+        <div style="top: 20%; left: 80%;">♔</div>
+        <div style="top: 80%; left: 10%;">💣</div>
+        <div style="top: 50%; left: 50%;">🐍</div>
+    </div>
+
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="screen-menu" class="screen active">
+        <h1 class="title">MEGA GAMES</h1>
+        <div class="menu-grid">
+            <button class="btn btn-chess" onclick="nav.to('chess-menu')">ШАХМАТЫ</button>
+            <button class="btn btn-ttt" onclick="nav.to('ttt-menu')">КРЕСТИКИ-НОЛИКИ</button>
+            <button class="btn btn-sapper" onclick="nav.to('sapper-game')">САПЕР</button>
+            <button class="btn btn-bs" onclick="nav.to('bs-menu')">МОРСКОЙ БОЙ</button>
+            <button class="btn btn-snake" onclick="nav.to('snake-menu')">ЗМЕЙКА</button>
+            <button class="btn btn-m3" onclick="nav.to('match3-menu')">3 В РЯД</button>
+        </div>
+        <div class="bottom-controls">
+            <button class="btn btn-gray" onclick="nav.to('settings')">НАСТРОЙКИ</button>
+        </div>
+    </div>
+
+    <!-- МЕНЮ ЗМЕЙКИ -->
+    <div id="screen-snake-menu" class="screen">
+        <h2>🐍 ЗМЕЙКА</h2>
+        <div class="settings-box">
+            <label>Скорость: <span id="snake-speed-val">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('snake-speed-val').innerText = this.value" id="snake-speed">
+        </div>
+        <button class="btn btn-snake" onclick="snakeGame.start()">ИГРАТЬ</button>
+        <button class="btn btn-back" onclick="nav.to('menu')">НАЗАД</button>
+    </div>
+
+    <!-- ИГРА ЗМЕЙКА -->
+    <div id="screen-snake-game" class="screen">
+        <div class="game-header">
+            <span id="snake-score">Счет: 0</span>
+            <button class="btn-small" onclick="snakeGame.stop(); nav.to('snake-menu')">ВЫХОД</button>
+        </div>
+        <canvas id="snake-canvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- ИГРА КРЕСТИКИ-НОЛИКИ -->
+    <div id="screen-ttt-menu" class="screen">
+        <h2>X / O</h2>
+        <button class="btn btn-ttt" onclick="tttGame.start('pvp')">ИГРАТЬ ВДВОЕМ</button>
+        <button class="btn btn-ttt" onclick="tttGame.start('pve')">ИГРАТЬ С БОТОМ</button>
+        <button class="btn btn-back" onclick="nav.to('menu')">НАЗАД</button>
+    </div>
+
+    <div id="screen-ttt-game" class="screen">
+        <div class="game-header">
+            <span id="ttt-status">Ход: X</span>
+            <button class="btn-small" onclick="nav.to('ttt-menu')">МЕНЮ</button>
+        </div>
+        <div class="ttt-grid" id="ttt-board">
+            <!-- Клетки генерируются JS -->
+        </div>
+    </div>
+
+    <!-- НАСТРОЙКИ (ТЕМЫ) -->
+    <div id="screen-settings" class="screen">
+        <h2>ТЕМЫ</h2>
+        <div class="menu-grid">
+            <button class="btn" style="background: #2563EB" onclick="themes.set('blue')">КИБЕРПАНК</button>
+            <button class="btn" style="background: #8B4513" onclick="themes.set('classic')">КЛАССИКА</button>
+            <button class="btn" style="background: #10B981" onclick="themes.set('emerald')">ИЗУМРУД</button>
+            <button class="btn" style="background: #9333EA" onclick="themes.set('purple')">НЕОН</button>
+            <button class="btn" style="background: #DC2626" onclick="themes.set('red')">МАРС</button>
+            <button class="btn" style="background: #374151" onclick="themes.set('gray')">НУАР</button>
+        </div>
+        <button class="btn btn-back" onclick="nav.to('menu')">НАЗАД</button>
+    </div>
+
+    <!-- СКРИПТЫ -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
